@@ -14,6 +14,8 @@
 		88B3B5C52A9A227D003CC893 /* rstorerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88B3B5C42A9A227D003CC893 /* rstorerTests.swift */; };
 		88B3B5CF2A9A227D003CC893 /* rstorerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88B3B5CE2A9A227D003CC893 /* rstorerUITests.swift */; };
 		88B3B5D12A9A227D003CC893 /* rstorerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88B3B5D02A9A227D003CC893 /* rstorerUITestsLaunchTests.swift */; };
+		88B3B5DF2A9CBBBE003CC893 /* q20kshare in Frameworks */ = {isa = PBXBuildFile; productRef = 88B3B5DE2A9CBBBE003CC893 /* q20kshare */; };
+		88B3B5E12A9CE311003CC893 /* RecoveryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88B3B5E02A9CE311003CC893 /* RecoveryManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +46,7 @@
 		88B3B5CA2A9A227D003CC893 /* rstorerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = rstorerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		88B3B5CE2A9A227D003CC893 /* rstorerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = rstorerUITests.swift; sourceTree = "<group>"; };
 		88B3B5D02A9A227D003CC893 /* rstorerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = rstorerUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		88B3B5E02A9CE311003CC893 /* RecoveryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +54,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				88B3B5DF2A9CBBBE003CC893 /* q20kshare in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -96,6 +100,7 @@
 			children = (
 				88B3B5B32A9A227B003CC893 /* rstorerApp.swift */,
 				88B3B5B52A9A227B003CC893 /* ContentView.swift */,
+				88B3B5E02A9CE311003CC893 /* RecoveryManager.swift */,
 				88B3B5B72A9A227D003CC893 /* Assets.xcassets */,
 				88B3B5B92A9A227D003CC893 /* Preview Content */,
 			);
@@ -143,6 +148,9 @@
 			dependencies = (
 			);
 			name = rstorer;
+			packageProductDependencies = (
+				88B3B5DE2A9CBBBE003CC893 /* q20kshare */,
+			);
 			productName = rstorer;
 			productReference = 88B3B5B02A9A227B003CC893 /* rstorer.app */;
 			productType = "com.apple.product-type.application";
@@ -215,6 +223,9 @@
 				Base,
 			);
 			mainGroup = 88B3B5A72A9A227B003CC893;
+			packageReferences = (
+				88B3B5DD2A9CBBBE003CC893 /* XCRemoteSwiftPackageReference "q20kshare" */,
+			);
 			productRefGroup = 88B3B5B12A9A227B003CC893 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -257,6 +268,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				88B3B5E12A9CE311003CC893 /* RecoveryManager.swift in Sources */,
 				88B3B5B62A9A227B003CC893 /* ContentView.swift in Sources */,
 				88B3B5B42A9A227B003CC893 /* rstorerApp.swift in Sources */,
 			);
@@ -422,7 +434,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"rstorer/Preview Content\"";
-				DEVELOPMENT_TEAM = X2PQYA6S48;
+				DEVELOPMENT_TEAM = NEAY582ME4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -451,7 +463,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"rstorer/Preview Content\"";
-				DEVELOPMENT_TEAM = X2PQYA6S48;
+				DEVELOPMENT_TEAM = NEAY582ME4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -588,6 +600,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		88B3B5DD2A9CBBBE003CC893 /* XCRemoteSwiftPackageReference "q20kshare" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/billdonner/q20kshare";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.2.18;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		88B3B5DE2A9CBBBE003CC893 /* q20kshare */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 88B3B5DD2A9CBBBE003CC893 /* XCRemoteSwiftPackageReference "q20kshare" */;
+			productName = q20kshare;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 88B3B5A82A9A227B003CC893 /* Project object */;
 }
