@@ -8,51 +8,36 @@
 import SwiftUI
 import q20kshare
 
-let PRIMARY_REMOTE = "https://billdonner.com/fs/gd/readyforios01.json"
-let SECONDARY_REMOTE = "https://billdonner.com/fs/gd/readyforios02.json"
-let TERTIARY_REMOTE = "https://billdonner.com/fs/gd/readyforios03.json"
+let PRIMARY_REMOTE = URL(string:"https://billdonner.com/fs/gd/readyforios01.json")!
+let SECONDARY_REMOTE = URL(string:"https://billdonner.com/fs/gd/readyforios02.json")!
+let TERTIARY_REMOTE = URL(string:"https://billdonner.com/fs/gd/readyforios03.json")!
 
 
-func rstore() async {
-  do {
-    
-    //1. get remote data, decode, and get id of Downloaded game data
-    let start_time = Date()
-    let tada = try await  RecoveryManager.downloadFile(from:URL(string: PRIMARY_REMOTE)!)
-    let gd =   try JSONDecoder().decode([GameData].self,from:tada)
-    let elapsed = Date().timeIntervalSince(start_time)
-    let id = gd[0].id // not what we want
-    print("Downloaded \(id) in \(elapsed) secs")
-    //2. try to restore both structures, otherwise initilize them
-    let (structure1, structure2) = try RecoveryManager.restoreOrInitializeStructures(id: id)
-    print(structure1)
-    print(structure2)
-  } catch {
-    print("Error: \(error)")
-  }
-}
 
-
+let CHOSEN_REMOTE = SECONDARY_REMOTE
 
 struct ContentView: View {
   @State var isDownloading = false
+  @State var foo:AppState = .init(id:UUID().uuidString, value: 1)
+  
   var body: some View {
     VStack {
+      Text(foo.id)
       Image(systemName: "globe")
         .imageScale(.large)
         .foregroundStyle(.tint)
       ProgressView("Downloading...").opacity(isDownloading ? 1.0:0.0)
-      Button { Task { isDownloading = true
-        await rstore()
-        isDownloading = false }
+      Button {
+        Task { isDownloading = true
+          foo = try! await RecoveryManager.rstore(CHOSEN_REMOTE)
+          isDownloading = false }
       }
-    
     label: {Text("Reload")}
     }
     .padding()
     .task {
       isDownloading = true
-      await rstore()
+      foo = try! await RecoveryManager.rstore(CHOSEN_REMOTE)
       isDownloading = false
     }
   }
@@ -62,13 +47,5 @@ struct ContentView: View {
   ContentView()
 }
 
-struct Structure1: Codable {
-  var id: String
-  var data: String
-}
 
-struct Structure2: Codable {
-  var id: String
-  var value: Int
-}
 

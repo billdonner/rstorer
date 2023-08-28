@@ -21,9 +21,9 @@ final class rstorerTests: XCTestCase {
     func testExample() throws {
 
     do {
-      let (structure1, structure2) = try RecoveryManager.restoreOrInitializeStructures()
+      let (structure1, appstate) = try RecoveryManager.restoreOrInitializeStructures()
       print(structure1)
-      print(structure2)
+      print(appstate)
     } catch {
       print("Error: \(error)")
     }

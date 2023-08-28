@@ -6,6 +6,17 @@
 //
 
 import Foundation
+import q20kshare
+
+struct PlayData: Codable {
+  var id: String
+  var data: [GameData]
+}
+
+struct AppState: Codable {
+  var id: String
+  var value: Int
+}
 class RecoveryManager {
   
  static func downloadFile(from url: URL ) async throws -> Data {
@@ -13,53 +24,90 @@ class RecoveryManager {
     return data
   }
     private static let structure1FileURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("structure1.json")
-    private static let structure2FileURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("structure2.json")
+    private static let appstateFileURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("appstate.json")
     
-    private static func saveStructure1(_ structure1: Structure1) throws {
+  static func savePlayData(_ structure1: PlayData) throws {
         let encodedData = try JSONEncoder().encode(structure1)
         try encodedData.write(to: structure1FileURL)
     }
     
-    private static func saveStructure2(_ structure2: Structure2) throws {
-        let encodedData = try JSONEncoder().encode(structure2)
-        try encodedData.write(to: structure2FileURL)
+   static func saveAppState(_ appstate: AppState) throws {
+        let encodedData = try JSONEncoder().encode(appstate)
+        try encodedData.write(to: appstateFileURL)
     }
     
-    private static func restoreStructure1() throws -> Structure1 {
+   static func restorePlayData() throws -> PlayData {
         let decodedData = try Data(contentsOf: structure1FileURL)
-        return try JSONDecoder().decode(Structure1.self, from: decodedData)
+        return try JSONDecoder().decode(PlayData.self, from: decodedData)
     }
     
-    private static func restoreStructure2() throws -> Structure2 {
-        let decodedData = try Data(contentsOf: structure2FileURL)
-        return try JSONDecoder().decode(Structure2.self, from: decodedData)
+  static func restoreAppState() throws -> AppState {
+        let decodedData = try Data(contentsOf: appstateFileURL)
+        return try JSONDecoder().decode(AppState.self, from: decodedData)
     }
     
-  private static func initializeStructure1(id:String) {
-        let newStructure1 = Structure1(id: id, data: "Initial data")
-        try? saveStructure1(newStructure1)
+  static func initializePlayData(id:String,data:[GameData]) {
+        let newPlayData = PlayData(id: id, data: data)
+        try? savePlayData(newPlayData)
     }
     
-  private static func initializeStructure2(id:String) {
-        let newStructure2 = Structure2(id: id, value: 0)
-        try? saveStructure2(newStructure2)
+ static func initializeAppState(id:String) {
+        let newAppState = AppState(id: id, value: 0)
+        try? saveAppState(newAppState)
     }
     
-  public static func restoreOrInitializeStructures(id:String) throws -> (Structure1, Structure2) {
-        if let restoredStructure1 = try? restoreStructure1(),
-           let restoredStructure2 = try? restoreStructure2(),
-           restoredStructure1.id == id ,
-           restoredStructure2.id ==  id {
+  public static func restoreOrInitializeStructures(id:String,data:[GameData]) throws -> (PlayData, AppState) {
+        if let restoredPlayData = try? restorePlayData(),
+           let restoredAppState = try? restoreAppState(),
+           restoredPlayData.id == id ,
+           restoredAppState.id ==  id {
           print("****Successful restoration")
-            return (restoredStructure1, restoredStructure2)
+            return (restoredPlayData, restoredAppState)
         } else {
           
-          initializeStructure1(id:id)
-          initializeStructure2(id: id)
+          initializePlayData(id:id,data:data)
+          initializeAppState(id: id)
           print("****Could not restore - initializing")
-            return try (restoreStructure1(), restoreStructure2())
+            return try (restorePlayData(), restoreAppState())
         }
     }
+  
+  
+ static func rstore(_ url:URL) async throws -> AppState  {
+    
+    //1. get remote data, decode, and get id of Downloaded game data
+    let start_time = Date()
+    let tada = try await  RecoveryManager.downloadFile(from:url)
+    let gd =   try JSONDecoder().decode([GameData].self,from:tada)
+    let elapsed = Date().timeIntervalSince(start_time)
+    let id = gd[0].id // not what we want
+    print("Downloaded \(id) in \(elapsed) secs")
+    //2. try to restore both structures, otherwise initilize them
+    // let (structure1, appstate) = try RecoveryManager.restoreOrInitializeStructures(id: id)
+    
+    let appstate = try? RecoveryManager.restoreAppState()
+    if let appstate = appstate{
+      if appstate.id == id {
+        // all good
+        print ("Restored app state")
+        return appstate
+      }
+      else {
+        // must be new download
+        print("New download - must initialize app state")
+        // the download has a different id, so reset all state
+        RecoveryManager.initializePlayData(id: id,data:gd)
+        RecoveryManager.initializeAppState(id: id )
+        return try RecoveryManager.restoreAppState()
+      }
+    }
+    else {
+      print("Could not restore app state")
+      // the download has a different id, so reset all state
+      RecoveryManager.initializeAppState(id: id )
+      return try RecoveryManager.restoreAppState()
+    }
+  }
 }
 
 
